@@ -1,0 +1,94 @@
+<link rel="import" href="../polymer/polymer.html">
+
+<dom-module id="at-silver-transform">
+  <template>
+    <style>
+      :host {
+        display: none;
+      }
+    </style>
+  </template>
+  <script>
+    'use strict';
+    Polymer({
+      is: 'at-silver-transform',
+      properties: {
+        template: {
+          type: String,
+          value: ""
+        },
+        value: {
+          type: String,
+          value: "",
+          readOnly: true
+        }
+      },
+      $meta: [{
+        title: "Dashboard transform",
+        type: "element",
+        xtype: "at-silver-transform"
+      }],
+      ready: function() {
+
+      },
+      set value(value) {},
+      actionListener: function(event) {
+        function isString(obj) {
+          return Object.prototype.toString.call(obj) === "[object String]";
+        }
+
+        function isNonEmptyString(obj) {
+          return isString(obj) && obj !== "";
+        }
+
+        function isObject(obj) {
+          return Object.prototype.toString.call(obj) === "[object Object]";
+        }
+
+        var curlyBraceRegex = /\{\{|\}\}/gm;
+        this._setValue("");
+
+        if (!isNonEmptyString(this.template) || // if template is empty string or anything else different from non empty string, ie array or object that is invalid template
+          !curlyBraceRegex.test(this.template) || // if template is a non empty string but doesn't have {{ or }} that means it doesn't have anything to replace
+          !isNonEmptyString(event.eventName) || // if event.eventName is an emtpy string or anything else different from non empty string, ie array or object that is invalid template
+          !isObject(event.data)) { // if event.data is not an object, we need this to be an object
+          return;
+        }
+
+        var template = this.template;
+        var templates = [];
+
+        if (template.indexOf(',') === -1) {
+          templates.push(template);
+        } else {
+          var templateParts = template.split(',');
+          for (var i = 0; i < templateParts.length; i++) {
+            var templatePart = templateParts[i];
+            templatePart = templatePart.trim();
+            templates.push(templatePart);
+          }
+        }
+
+        var cachedEvents = this._cachedEvents;
+        if (!this._cachedEvents) {
+          cachedEvents = this._cachedEvents = {};
+        }
+        var eventName = event.eventName;
+        cachedEvents[eventName] = event.data[eventName];
+
+        var valueParts = [];
+        templates.forEach(function (template, index) {
+          var fieldName = template.substring(template.indexOf('{{')+2, template.indexOf('}}'));
+          if (cachedEvents.hasOwnProperty(fieldName)) {
+            template = template.replace("{{" + fieldName + "}}", cachedEvents[fieldName]);
+          }
+          valueParts.push(template);
+        });
+        var value = valueParts.join(",");
+
+        this._setValue(value);
+        this.fire('value-changed', { value: value });
+      }
+    });
+  </script>
+</dom-module>

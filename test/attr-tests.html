@@ -1,0 +1,240 @@
+<!doctype html>
+<html>
+
+<head>
+
+  <title>at-silver-transform tests</title>
+
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1, user-scalable=yes">
+
+  <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
+
+  <script src="../../web-component-tester/browser.js"></script>
+  <script src="../../iron-test-helpers/test-helpers.js"></script>
+  <script src="../../iron-test-helpers/mock-interactions.js"></script>
+
+  <link rel="import" href="../at-silver-transform.html">
+
+</head>
+
+<body>
+
+  <!-- tests where template is invalid -->
+  <test-fixture id="templUndefined">
+    <template>
+      <at-silver-transform template="undefined"></at-silver-transform>
+    </template>
+  </test-fixture>
+
+  <test-fixture id="templNull">
+    <template>
+      <at-silver-transform template="null"></at-silver-transform>
+    </template>
+  </test-fixture>
+
+  <test-fixture id="templTrue">
+    <template>
+      <at-silver-transform template="true"></at-silver-transform>
+    </template>
+  </test-fixture>
+
+  <test-fixture id="templFalse">
+    <template>
+      <at-silver-transform template="false"></at-silver-transform>
+    </template>
+  </test-fixture>
+
+  <test-fixture id="templ424242">
+    <template>
+      <at-silver-transform template="424242"></at-silver-transform>
+    </template>
+  </test-fixture>
+
+  <test-fixture id="templ3.14159">
+    <template>
+      <at-silver-transform template="3.14159"></at-silver-transform>
+    </template>
+  </test-fixture>
+
+  <test-fixture id="templ[]">
+    <template>
+      <at-silver-transform template="[]"></at-silver-transform>
+    </template>
+  </test-fixture>
+
+  <test-fixture id="templ{}">
+    <template>
+      <at-silver-transform template="{}"></at-silver-transform>
+    </template>
+  </test-fixture>
+
+  <test-fixture id="templ">
+    <template>
+      <at-silver-transform template=""></at-silver-transform>
+    </template>
+  </test-fixture>
+
+  <!-- tests where template is valid -->
+
+  <test-fixture id="templNoVars">
+    <template>
+      <at-silver-transform template="input1"></at-silver-transform>
+    </template>
+  </test-fixture>
+
+  <test-fixture id="templVarInput1">
+    <template>
+      <at-silver-transform template="input1={{input1}}"></at-silver-transform>
+    </template>
+  </test-fixture>
+
+  <test-fixture id="templVarInput1Input2">
+    <template>
+      <at-silver-transform template="input1={{input1}},input2={{input2}}"></at-silver-transform>
+    </template>
+  </test-fixture>
+
+
+  <script>
+    suite('tests where template value is set as attribute', function () {
+
+      test('invalid template values [ "undefined", "null", "true", "false", "424242", "3.14159", "[]", "{}", "" ]', function () {
+        var selectorTemplate = "templ";
+        var selectorParts = [ "Undefined", "Null", "True", "False", "424242", "3.14159", "[]", "{}", "" ];
+        var field;
+
+        var invalidEventData = {
+          eventName: "",
+          data: {}
+        };
+
+        var validEventData = {
+          eventName: "input1",
+          data: {
+            "input1": "value1"
+          }
+        };
+
+        selectorParts.forEach(function (selPart, index) {
+          var selector = selectorTemplate + selPart;
+          field = fixture(selector);
+
+          field.actionListener(invalidEventData);
+          assert.equal(field.value, "", "value is not correct");
+
+          field.actionListener(validEventData);
+          assert.equal(field.value, "", "value is not correct");
+        });
+
+      });
+
+      test('test where template: input1', function () {
+        var field = fixture('templNoVars');
+
+        var invalidEventData = {
+          eventName: "",
+          data: {}
+        };
+
+        var validEventData = {
+          eventName: "input1",
+          data: {
+            "input1": "value1"
+          }
+        };
+
+        field.actionListener(invalidEventData);
+        assert.equal(field.value, "", "value is not correct");
+
+        field.actionListener(validEventData);
+        assert.equal(field.value, "", "value is not correct");
+      });
+
+      test('test where template: input1={{input1}}', function () {
+        var field = fixture('templVarInput1');
+
+        var invalidEventData = {
+          eventName: "",
+          data: {}
+        };
+
+        var validEventData = {
+          eventName: "input1",
+          data: {
+            "input1": "value1"
+          }
+        };
+
+        field.actionListener(invalidEventData);
+        assert.equal(field.value, "", "value is not correct");
+
+        field.actionListener(validEventData);
+        assert.equal(field.value, "input1=value1", "value is not correct");
+
+        validEventData.data.input1 = "value2";
+        field.actionListener(validEventData);
+        assert.equal(field.value, "input1=value2", "value is not correct");
+
+        validEventData.data.input1 = "value3";
+        field.actionListener(validEventData);
+        assert.equal(field.value, "input1=value3", "value is not correct");
+      });
+
+      test('test where template: input1={{input1}},input2={{input2}}', function () {
+        var field = fixture('templVarInput1Input2');
+
+        var validEventData = {
+          eventName: "input1",
+          data: {
+            "input1": "value1"
+          }
+        };
+
+        field.actionListener(validEventData);
+        assert.equal(field.value, "input1=value1,input2={{input2}}", "value is not correct");
+      });
+
+      test('test where template: input1={{input1}},input2={{input2}}', function () {
+        var field = fixture('templVarInput1Input2');
+
+        var validEventData = {
+          eventName: "input2",
+          data: {
+            "input2": "value2"
+          }
+        };
+
+        field.actionListener(validEventData);
+        assert.equal(field.value, "input1={{input1}},input2=value2", "value is not correct");
+      });
+
+      test('test where template: input1={{input1}},input2={{input2}}', function () {
+        var field = fixture('templVarInput1Input2');
+
+        var validEventData1 = {
+          eventName: "input1",
+          data: {
+            "input1": "value1"
+          }
+        };
+
+        var validEventData2 = {
+          eventName: "input2",
+          data: {
+            "input2": "value2"
+          }
+        };
+
+        field.actionListener(validEventData1);
+        assert.equal(field.value, "input1=value1,input2={{input2}}", "value is not correct");
+
+        field.actionListener(validEventData2);
+        assert.equal(field.value, "input1=value1,input2=value2", "value is not correct");
+      });
+    });
+  </script>
+</body>
+
+</html>

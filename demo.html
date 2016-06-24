@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <title>at-silver-transform demo</title>
+  <script src="../webcomponentsjs/webcomponents-lite.js"></script>
+  <link rel="import" href="at-silver-transform.html">
+  <link rel="import" href="../at-core-dashboard/at-core-dashboard.html">
+</head>
+
+<body>
+  <at-core-dashboard id="dashboard"></at-core-dashboard>
+
+  <script>
+    document.addEventListener('WebComponentsReady', function(event) {
+
+      var schema = {
+        "properties": {
+          "input1": {
+            "type": "string",
+            "hideLabel": false,
+            "required": false,
+            "disabled": false,
+            "placeholder": "",
+            "maxChars": 0,
+            "hide": false,
+            "actionListeners": [],
+            "valid": true,
+            "errorMessage": "",
+            "hint": "",
+            "title": "Text 1",
+            "default": "",
+            "xgridcols": "6"
+          },
+          "transform1": {
+            "type": "element",
+            "xtype": "at-silver-transform",
+            "template": "input1={{input1}}",
+            "actionListeners": [{
+              "value": "input1"
+            }],
+            "xgridcols": "6"
+          },
+          "echo1": {
+            "type": "element",
+            "xtype": "at-core-dashboard-echo",
+            "template": "transform1={{transform1}}",
+            "actionListeners": [{
+              "value": "transform1"
+            }],
+            "xgridcols": "6"
+          }
+        }
+      }
+
+      var dashboard = document.getElementById('dashboard');
+      dashboard.schema = schema;
+
+    });
+  </script>
+
+</body>
+
+</html>

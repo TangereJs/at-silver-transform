@@ -1,0 +1,8 @@
+{
+  "name": "at-silver-transform",
+  "private": true,
+  "dependencies": {
+    "polymer": "Polymer/polymer#master"
+  },
+  "version": "0.0.0.1"
+}
