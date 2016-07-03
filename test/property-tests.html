@@ -33,7 +33,7 @@
 
       test('invalid template values [ "undefined", "null", "true", "false", "424242", "3.14159", "[]", "{}", "" ]', function () {
 
-        var templates = [ "undefined", "null", "true", "false", "424242", "3.14159", "[]", "{}", "" ];
+        var templates = ["undefined", "null", "true", "false", "424242", "3.14159", "[]", "{}", ""];
         var field = fixture('templ');
 
         var invalidEventData = {
@@ -167,6 +167,32 @@
 
         field.actionListener(validEventData2);
         assert.equal(field.value, "input1=value1,input2=value2", "value is not correct");
+      });
+
+
+      test('test where template: input1={{input1}} / input2={{input2}}', function () {
+        var field = fixture('templ');
+        field.template = "input1={{input1}} / input2={{input2}}";
+
+        var validEventData1 = {
+          eventName: "input1",
+          data: {
+            "input1": "value1"
+          }
+        };
+
+        var validEventData2 = {
+          eventName: "input2",
+          data: {
+            "input2": "value2"
+          }
+        };
+
+        field.actionListener(validEventData1);
+        assert.equal(field.value, "input1=value1 / input2={{input2}}", "value is not correct");
+
+        field.actionListener(validEventData2);
+        assert.equal(field.value, "input1=value1 / input2=value2", "value is not correct");
       });
     });
   </script>
