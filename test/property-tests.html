@@ -37,14 +37,20 @@
         var field = fixture('templ');
 
         var invalidEventData = {
-          eventName: "",
-          data: {}
+          type: "",
+          parameter: "",
+          detail: {}
         };
 
         var validEventData = {
-          eventName: "input1",
-          data: {
-            "input1": "value1"
+          type: "input1-changed",
+          parameter: "value",
+          detail: {
+            model: {
+              state: {
+                "input1": "value1"
+              }
+            }
           }
         };
 
@@ -65,16 +71,22 @@
         field.template = "input1";
 
         var invalidEventData = {
-          eventName: "",
-          data: {}
+          type: "",
+          parameter: "",
+          detail: {}
         };
 
         var validEventData = {
-          eventName: "input1",
-          data: {
-            "input1": "value1"
+          type: "input1-changed",
+          parameter: "value",
+          detail: {
+            model: {
+              state: {
+                "input1": "value1"
+              }
+            }
           }
-        };
+        };;
 
         field.actionListener(invalidEventData);
         assert.equal(field.value, "", "value is not correct");
@@ -88,14 +100,20 @@
         field.template = "input1={{input1}}";
 
         var invalidEventData = {
-          eventName: "",
-          data: {}
+          type: "",
+          parameter: "",
+          detail: {}
         };
 
         var validEventData = {
-          eventName: "input1",
-          data: {
-            "input1": "value1"
+          type: "input1-changed",
+          parameter: "value",
+          detail: {
+            model: {
+              state: {
+                "input1": "value1"
+              }
+            }
           }
         };
 
@@ -105,11 +123,11 @@
         field.actionListener(validEventData);
         assert.equal(field.value, "input1=value1", "value is not correct");
 
-        validEventData.data.input1 = "value2";
+        validEventData.detail.model.state.input1 = "value2";
         field.actionListener(validEventData);
         assert.equal(field.value, "input1=value2", "value is not correct");
 
-        validEventData.data.input1 = "value3";
+        validEventData.detail.model.state.input1 = "value3";
         field.actionListener(validEventData);
         assert.equal(field.value, "input1=value3", "value is not correct");
       });
@@ -119,9 +137,14 @@
         field.template = "input1={{input1}},input2={{input2}}";
 
         var validEventData = {
-          eventName: "input1",
-          data: {
-            "input1": "value1"
+          type: "input1-changed",
+          parameter: "value",
+          detail: {
+            model: {
+              state: {
+                "input1": "value1"
+              }
+            }
           }
         };
 
@@ -134,9 +157,14 @@
         field.template = "input1={{input1}},input2={{input2}}";
 
         var validEventData = {
-          eventName: "input2",
-          data: {
-            "input2": "value2"
+          type: "input2-changed",
+          parameter: "value",
+          detail: {
+            model: {
+              state: {
+                "input2": "value2"
+              }
+            }
           }
         };
 
@@ -149,16 +177,27 @@
         field.template = "input1={{input1}},input2={{input2}}";
 
         var validEventData1 = {
-          eventName: "input1",
-          data: {
-            "input1": "value1"
+          type: "input1-changed",
+          parameter: "value",
+          detail: {
+            model: {
+              state: {
+                "input1": "value1"
+              }
+            }
           }
         };
 
         var validEventData2 = {
-          eventName: "input2",
-          data: {
-            "input2": "value2"
+          type: "input2-changed",
+          parameter: "value",
+          detail: {
+            model: {
+              state: {
+                "input1": "value1",
+                "input2": "value2"
+              }
+            }
           }
         };
 
@@ -175,16 +214,27 @@
         field.template = "input1={{input1}} / input2={{input2}}";
 
         var validEventData1 = {
-          eventName: "input1",
-          data: {
-            "input1": "value1"
+          type: "input1-changed",
+          parameter: "value",
+          detail: {
+            model: {
+              state: {
+                "input1": "value1"
+              }
+            }
           }
         };
 
         var validEventData2 = {
-          eventName: "input2",
-          data: {
-            "input2": "value2"
+          type: "input2-changed",
+          parameter: "value",
+          detail: {
+            model: {
+              state: {
+                "input1": "value1",
+                "input2": "value2"
+              }
+            }
           }
         };
 

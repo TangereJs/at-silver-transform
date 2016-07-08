@@ -38,8 +38,8 @@
           return Object.prototype.toString.call(obj) === "[object String]";
         }
 
-        function isNonEmptyString(obj) {
-          return isString(obj) && obj !== "";
+        function isEmptyString(obj) {
+          return isString(obj) && obj === "";
         }
 
         function isObject(obj) {
@@ -49,9 +49,9 @@
         var curlyBraceRegex = /\{\{|\}\}/gm;
         this._setValue("");
 
-        if (!isNonEmptyString(this.template) || // if template is empty string or anything else different from non empty string, ie array or object that is invalid template
+        if (isEmptyString(this.template) || // if template is empty string or anything else different from non empty string, ie array or object that is invalid template
           !curlyBraceRegex.test(this.template) || // if template is a non empty string but doesn't have {{ or }} that means it doesn't have anything to replace
-          !isNonEmptyString(event.type) || // if event.ty8pe is an emtpy string or anything else different from non empty string, ie array or object that is invalid template
+          isEmptyString(event.type) || // if event.ty8pe is an emtpy string or anything else different from non empty string, ie array or object that is invalid template
           !isObject(event.detail) || // if event.detail is not an object, we need this to be an object
           !isObject(event.detail.model) || // if event.detail.model is not an object, we need this to be an object
           !isObject(event.detail.model.state) // if event.detail.model.state is not an object, we need this to be an object
@@ -77,6 +77,10 @@
             valueProto = valueProto.replace(matchedPart, state[fieldName]);
           }
         });
+
+        if (this.value === valueProto) {
+          return;
+        }
 
         this._setValue(valueProto);
         this.fire('value-changed', { value: valueProto });
