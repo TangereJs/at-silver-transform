@@ -2,9 +2,9 @@
   "name": "at-silver-transform",
   "private": true,
   "dependencies": {
-    "tangere": "TangereJs/tangere#0.8-preview",
-    "at-core-dashboard": "TangereJs/at-core-dashboard#0.8-preview",
-    "at-doc-viewer": "TangereJs/at-doc-viewer#0.8-preview"
+    "tangere": "TangereJs/tangere#master",
+    "at-core-dashboard": "TangereJs/at-core-dashboard#master",
+    "at-doc-viewer": "TangereJs/at-doc-viewer#master"
   },
   "version": "0.0.0.1"
 }
